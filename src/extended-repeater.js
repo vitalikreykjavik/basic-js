@@ -1,31 +1,56 @@
-module.exports = function repeater(str, options) {
-  //let add = options.addition;
-  //let addSep = options.additionSeparator;
-  if (typeof str !== 'string') {
-    str.toString();
-  } else if (typeof options.addition !== 'string') {
-    options.addition.toString();
-  }; 
-  
-  if ('separator' in options === false) {
-    options.separator = '+';
-    } else if ('additionSeparator' in options === false) {
-      options.additionSeparator = '|';
-    };
+const CustomError = require("../extensions/custom-error");
 
-  if ('repeatTimes' in options === false) {
-    options.repeatTimes = -1;
-    } else if ('additionRepeatTimes' in options === false) {
-      options.additionRepeatTimes = -1;
-    }; 
+module.exports = function repeater(str, options) {
+  if (!str) {
+    str = 'null'
+  }
   
-  let addTo = options.addition + options.additionSeparator;
-  let addToRepeated = addTo.repeat(options.additionRepeatTimes - 1) + options.addition;
-  let preBase = str + addToRepeated + options.separator;
-  let base = str + addToRepeated;
-  let almostResult = preBase.repeat(options.repeatTimes - 1);
-  let result = almostResult + base;
+  if (str) {
+    if (typeof(str) !== 'string') {
+      str.toString();
+    }
+  }
+
+  if ("addition" in options) {
+    if (typeof(options.addition) !== 'string') {
+      options.addition = options.addition.toString();
+    }
+  }
+ 
+  if (!options.separator) {
+    options.separator = '+'
+  };
+
+  if (!options.additionSeparator) {
+    options.additionSeparator = '|'
+  };
+  
+  if (!options.repeatTimes) {
+    options.repeatTimes = 0;
+  };
+
+  if (!options.additionRepeatTimes) {
+    options.additionRepeatTimes = 0;
+  };
+
+  let prerareAddition = '';
+  let preOkayAddition = '';
+  let okayAddition = '';
+
+  if (options.addition) {
+    prerareAddition = options.addition + options.additionSeparator;
+  } 
+
+  if (options.additionRepeatTimes > 1) {
+    preOkayAddition = prerareAddition.repeat(options.additionRepeatTimes);
+    okayAddition = preOkayAddition.slice(0, -options.additionSeparator.length)
+  } else if (options.additionRepeatTimes === 1) {
+    okayAddition = options.addition;
+  }
+
+  let toExtend = str + okayAddition + options.separator;
+  let preResult = toExtend.repeat(options.repeatTimes);
+  result = preResult.slice(0, -options.separator.length);
 
   return result;
 };
-  
