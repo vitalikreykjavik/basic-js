@@ -1,5 +1,3 @@
-const CustomError = require("../extensions/custom-error");
-
 module.exports = function repeater(str, options) {
   if (!str) {
     str = 'null'
@@ -29,8 +27,17 @@ module.exports = function repeater(str, options) {
     options.repeatTimes = 0;
   };
 
+  if (typeof options.repeatTimes === "undefined") {
+      options.repeatTimes = 1;
+    };
+
+
   if (!options.additionRepeatTimes) {
     options.additionRepeatTimes = 0;
+  };
+
+  if (typeof options.additionRepeatTimes === "undefined") {
+    options.additionRepeatTimes = 1;
   };
 
   let prerareAddition = '';
